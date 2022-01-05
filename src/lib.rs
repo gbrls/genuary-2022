@@ -10,3 +10,13 @@ pub fn capture_path(app: &nannou::App) -> std::path::PathBuf {
         .join(format!("{:003}", app.elapsed_frames()))
         .with_extension("png")
 }
+
+pub trait SaveAnimation {
+    fn save_animation(&self) { }
+}
+
+impl SaveAnimation for nannou::App {
+    fn save_animation(&self) {
+        self.main_window().capture_frame(capture_path(self))
+    }
+}

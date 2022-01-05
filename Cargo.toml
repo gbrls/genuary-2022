@@ -15,3 +15,7 @@ path = "src/bin/hello.rs"
 [[bin]]
 name = "01"
 path = "src/bin/01.rs"
+
+[[bin]]
+name = "02"
+path = "src/bin/02.rs"
