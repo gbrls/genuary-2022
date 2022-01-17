@@ -1,3 +1,5 @@
+use nannou::prelude::*;
+
 pub fn some_fn_from_lib() -> Option<i32> {
     Some(42)
 }
