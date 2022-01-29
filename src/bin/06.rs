@@ -1,10 +1,13 @@
 // Color gradients gone wrong.
 
 use genuary_2022::*;
-use nannou::prelude::*;
+use nannou::{
+    image::{DynamicImage, GenericImageView},
+    prelude::*,
+};
 
-const W: u32 = 920;
-const H: u32 = 920;
+const W: u32 = 1500;
+const H: u32 = 800;
 
 fn main() {
     nannou::app(model).update(update).run();
@@ -12,6 +15,7 @@ fn main() {
 
 struct Model {
     _window: window::Id,
+    image: DynamicImage,
 }
 
 fn event_update(app: &App, model: &mut Model, event: WindowEvent) {
@@ -26,6 +30,14 @@ fn event_update(app: &App, model: &mut Model, event: WindowEvent) {
 }
 
 fn model(app: &App) -> Model {
+    //let img_path = app.assets_path().unwrap().join("image-00.png");
+    let img_path = app.assets_path().unwrap().join("berserk-00.jpg");
+
+    let image = nannou::image::io::Reader::open(&img_path)
+        .unwrap()
+        .decode()
+        .unwrap();
+
     let _window = app
         .new_window()
         .event(event_update)
@@ -33,22 +45,33 @@ fn model(app: &App) -> Model {
         .build()
         .unwrap();
 
-    app.set_loop_mode(LoopMode::loop_once());
+    //app.set_loop_mode(LoopMode::loop_once());
     app.main_window().set_inner_size_pixels(W, H);
 
-    Model { _window }
+    Model { _window, image }
 }
 
 fn update(app: &App, _model: &mut Model, _update: Update) {}
 
-fn view(app: &App, _model: &Model, frame: Frame) {
-    let draw = app.draw();
-    draw.background().color(BLACK);
+fn brightness(r: f32, g: f32, b: f32) -> f32 {
+    vec3(r, g, b).length()
+}
 
-    draw.polyline()
-        .stroke_weight(1.0)
-        .color(WHITE)
-        .points((0..800).map(|x| vec2(x as f32, (x as f32 / 30.0).sin() * 100.0)));
+fn view(app: &App, model: &Model, frame: Frame) {
+    let draw = app.draw();
+    //draw.background().color(BLACK);
+
+    for _ in 0..1_00 {
+        let b = 200.0;
+        let x = random_range(-b, b);
+        let y = random_range(-b, b);
+
+        let r = random_range(0.7, 0.89);
+        let g = random_range(0.6, 0.72);
+        let b = random_range(0.4, 0.52);
+
+        draw.ellipse().w_h(2.0, 2.0).x_y(x, y).color(rgb(r, g, b));
+    }
 
     draw.to_frame(app, &frame).unwrap();
 }
